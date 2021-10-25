@@ -9,6 +9,7 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 
 /**
+ * General result class
  * @author lijf
  */
 @Data

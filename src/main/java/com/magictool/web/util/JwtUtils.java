@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * 生成Token和校验Token的工具类
+ * Tool classes for generating and verifying tokens
  * @author lijf
  */
 public class JwtUtils {

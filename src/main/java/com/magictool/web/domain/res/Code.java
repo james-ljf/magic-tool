@@ -3,21 +3,19 @@ package com.magictool.web.domain.res;
 import java.io.Serializable;
 
 /**
- * 自定义业务状态接口
+ * User defined business status interface
  * @author lijf
  */
 public interface Code extends Serializable {
 
     /**
      * 状态码
-     *
      * @return String
      */
     String getCode();
 
     /**
      * 信息
-     *
      * @return String
      */
     String getMsg();
