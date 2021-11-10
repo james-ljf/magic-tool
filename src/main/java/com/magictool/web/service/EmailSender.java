@@ -44,6 +44,7 @@ public class EmailSender {
         try {
             BufferedImage image = ImageIO.read(Objects.requireNonNull(EmailSender.class.getResourceAsStream("resource文件夹下静态资源路径")));
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            // 转换为gif，占用内存更小
             ImageIO.write(image, "gif", stream);
             base64Logo = "data:image/gif;base64," + Base64.encode(stream.toByteArray());
         } catch (IOException e) {
