@@ -25,6 +25,7 @@
         <pagehelper.version>1.4.0</pagehelper.version>
         <redisson.version>3.16.4</redisson.version>
         <hutool.version>5.7.15</hutool.version>
+        <lucene.version>7.5.0</lucene.version>
         <java.version>1.8</java.version>
     </properties>
 
@@ -100,6 +101,37 @@
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-captcha</artifactId>
             <version>${hutool.version}</version>
+        </dependency>
+        <!--lucene-->
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-core</artifactId>
+            <version>${lucene.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-queryparser</artifactId>
+            <version>${lucene.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-analyzers-common</artifactId>
+            <version>${lucene.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-highlighter</artifactId>
+            <version>${lucene.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-analyzers-smartcn</artifactId>
+            <version>${lucene.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.janeluo</groupId>
+            <artifactId>ikanalyzer</artifactId>
+            <version>2012_u6</version>
         </dependency>
     </dependencies>
 
