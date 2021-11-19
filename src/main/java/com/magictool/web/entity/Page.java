@@ -1,4 +1,4 @@
-package com.magictool.web.domain;
+package com.magictool.web.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

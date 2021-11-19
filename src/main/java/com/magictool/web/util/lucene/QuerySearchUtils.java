@@ -76,37 +76,6 @@ public class QuerySearchUtils {
         return new WildcardQuery(new Term(field, keyword));
     }
 
-//    /**
-//     * 创建范围查询对象
-//     * @param field 查询的字段
-//     * @param lowerTerm 最小值
-//     * @param upperTerm 最大值
-//     */
-   /* public static <T> Query buildRangeQuery(String field, T lowerTerm, T upperTerm){
-        Query query = null;
-        if (lowerTerm instanceof Integer && upperTerm instanceof Integer) {
-            Integer lower = (Integer) lowerTerm;
-            Integer upper = (Integer) upperTerm;
-            query = IntPoint.newRangeQuery(field, lower, upper);
-        }
-        if (lowerTerm instanceof Long && upperTerm instanceof Long){
-            long lower = (long) lowerTerm;
-            long upper = (long) upperTerm;
-            query = LongPoint.newRangeQuery(field, lower, upper);
-        }
-        if (lowerTerm instanceof Float && upperTerm instanceof Float){
-            float lower = (float) lowerTerm;
-            float upper = (float) upperTerm;
-            query = FloatPoint.newRangeQuery(field, lower, upper);
-        }
-        if (lowerTerm instanceof Double && upperTerm instanceof Double){
-            double lower = (double) lowerTerm;
-            double upper = (double) upperTerm;
-            query = DoublePoint.newRangeQuery(field, lower, upper);
-        }
-        return query;
-    }*/
-
     /**
      * 创建模糊查询对象
      * @param field   查询的字段
