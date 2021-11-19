@@ -1,5 +1,9 @@
 package com.magictool.web.util.lucene;
 
+import java.io.IOException;
+import java.nio.file.Paths;
+
+import com.magictool.web.constants.InitDirectory;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
@@ -8,14 +12,16 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
-import org.apache.lucene.search.highlight.*;
+import org.apache.lucene.search.highlight.Formatter;
+import org.apache.lucene.search.highlight.Highlighter;
+import org.apache.lucene.search.highlight.QueryTermScorer;
+import org.apache.lucene.search.highlight.Scorer;
+import org.apache.lucene.search.highlight.SimpleFragmenter;
+import org.apache.lucene.search.highlight.SimpleHTMLFormatter;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
 import org.wltea.analyzer.lucene.IKAnalyzer;
-
-import java.io.IOException;
-import java.nio.file.Paths;
 
 /**
  * Lucene常用工具类
@@ -49,7 +55,10 @@ public class LuceneUtil {
      * 创建索引读取工具
      */
     public static IndexReader buildIndexReader(){
-        Directory directory = buildFSDirectory("磁盘路径");
+        if (InitDirectory.directory == null){
+            return null;
+        }
+        Directory directory = InitDirectory.directory;
         try{
             // 索引读取工具
             return DirectoryReader.open(directory);
@@ -86,25 +95,16 @@ public class LuceneUtil {
     }
 
     /**
-     * 关闭索引文件生成对象以及文件夹对象
+     * 关闭索引文件生成对象
      * @param indexWriter   写入索引对象
-     * @param directory 索引存放地址
      */
-    public static void close(IndexWriter indexWriter, Directory directory) {
+    public static void close(IndexWriter indexWriter) {
         if (indexWriter != null) {
             try {
                 indexWriter.close();
             } catch (IOException e) {
                 log.warn("[indexWriter close]: error={}, indexWriter={}", e, indexWriter);
                 indexWriter = null;
-            }
-        }
-        if (directory != null) {
-            try {
-                directory.close();
-            } catch (IOException e) {
-                log.warn("[directory close]: error={}, directory={}", e, indexWriter);
-                directory = null;
             }
         }
     }
