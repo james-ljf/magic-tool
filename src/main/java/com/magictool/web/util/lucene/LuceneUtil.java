@@ -33,12 +33,13 @@ public class LuceneUtil {
 
     /**
      * 创建存储目录（磁盘）
-     * @param filePath  索引存放在磁盘的路径
+     *
+     * @param filePath 索引存放在磁盘的路径
      */
-    public static Directory buildFSDirectory(String filePath){
-        try{
+    public static Directory buildFSDirectory(String filePath) {
+        try {
             return FSDirectory.open(Paths.get(filePath));
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
@@ -54,15 +55,15 @@ public class LuceneUtil {
     /**
      * 创建索引读取工具
      */
-    public static IndexReader buildIndexReader(){
-        if (InitDirectory.directory == null){
+    public static IndexReader buildIndexReader() {
+        if (InitDirectory.directory == null) {
             return null;
         }
         Directory directory = InitDirectory.directory;
-        try{
+        try {
             // 索引读取工具
             return DirectoryReader.open(directory);
-        }catch (Exception e){
+        } catch (Exception e) {
             log.warn("[401.build indexReader]: error={}, directory={}", e, directory);
         }
         return null;
@@ -71,12 +72,13 @@ public class LuceneUtil {
     /**
      * 创建索引搜索对象工具
      */
-    public static IndexSearcher buildIndexSearcher(IndexReader reader){
+    public static IndexSearcher buildIndexSearcher(IndexReader reader) {
         return new IndexSearcher(reader);
     }
 
     /**
      * 创建写入索引对象
+     *
      * @param directory 索引存放目录
      */
     public static IndexWriter buildIndexWriter(Directory directory) {
@@ -96,7 +98,8 @@ public class LuceneUtil {
 
     /**
      * 关闭索引文件生成对象
-     * @param indexWriter   写入索引对象
+     *
+     * @param indexWriter 写入索引对象
      */
     public static void close(IndexWriter indexWriter) {
         if (indexWriter != null) {
@@ -110,11 +113,11 @@ public class LuceneUtil {
     }
 
     /**
-     * 关闭索引文件读取对象以及文件夹对象
-     * @param reader    索引读取工具
-     * @param directory 索引存放地址
+     * 关闭索引文件读取对象
+     *
+     * @param reader 索引读取工具
      */
-    public static void close(DirectoryReader reader, Directory directory) {
+    public static void close(IndexReader reader) {
         if (reader != null) {
             try {
                 reader.close();
@@ -122,19 +125,12 @@ public class LuceneUtil {
                 reader = null;
             }
         }
-        if (directory != null) {
-            try {
-                directory.close();
-            } catch (IOException e) {
-                directory = null;
-            }
-        }
-
     }
 
     /**
      * 高亮标签
-     * @param query 查询对象
+     *
+     * @param query     查询对象
      * @param fieldName 关键字
      */
     public static Highlighter getHighlighter(Query query, String fieldName) {
