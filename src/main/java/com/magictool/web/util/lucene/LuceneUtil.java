@@ -3,7 +3,7 @@ package com.magictool.web.util.lucene;
 import java.io.IOException;
 import java.nio.file.Paths;
 
-import com.magictool.web.constants.InitDirectory;
+import com.magictool.web.constants.SingletonLucene;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
@@ -55,10 +55,10 @@ public class LuceneUtil {
      * 创建索引读取工具
      */
     public static IndexReader buildIndexReader(){
-        if (InitDirectory.directory == null){
+        if (SingletonLucene.getDirectory() == null){
             return null;
         }
-        Directory directory = InitDirectory.directory;
+        Directory directory = SingletonLucene.getDirectory();
         try{
             // 索引读取工具
             return DirectoryReader.open(directory);
@@ -110,11 +110,10 @@ public class LuceneUtil {
     }
 
     /**
-     * 关闭索引文件读取对象以及文件夹对象
+     * 关闭索引文件读取对象
      * @param reader    索引读取工具
-     * @param directory 索引存放地址
      */
-    public static void close(DirectoryReader reader, Directory directory) {
+    public static void close(IndexReader reader) {
         if (reader != null) {
             try {
                 reader.close();
@@ -122,14 +121,6 @@ public class LuceneUtil {
                 reader = null;
             }
         }
-        if (directory != null) {
-            try {
-                directory.close();
-            } catch (IOException e) {
-                directory = null;
-            }
-        }
-
     }
 
     /**
