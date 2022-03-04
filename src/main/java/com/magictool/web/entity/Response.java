@@ -1,105 +1,78 @@
 package com.magictool.web.entity;
 
-import com.magictool.web.constants.http.Code;
+import com.magictool.web.entity.dto.Code;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import java.util.List;
+import java.io.Serializable;
+import java.util.Map;
 
 /**
- * 控制器返回实体类
- *
- * @author : tx
- * @version : 1.0.0
- * @time : 2021/12/27 14:00
- **/
+ * @author lijf
+ */
 @Data
 @Accessors(chain = true)
-@NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class Response<T> {
+@NoArgsConstructor
+public class Response<T> implements Serializable {
 
     /**
-     * 状态码
+     * 自定义业务状态码，8888表示请求成功，非8888则表示请求异常
      */
-    private Integer code;
-    /**
-     * 状态信息
-     */
-    private String message;
-    /**
-     * 需要返回的数据
-     */
-    private T data;
-    /**
-     * 需要返回多个数据
-     */
-    private List<T> dataList;
+    private String code;
 
     /**
-     * 成功状态的返回
-     * 更加方便返回成功数据
-     *
-     * @param message 返回的详细信息
-     * @param <R> 返回的数据类型
-     * @return 一个返回类的实体
+     * 错误信息，调用成功则为空
      */
-    public static <R> Response<R> ok(String message){
-        Response<R> response = new Response<>();
-        response.code = Code.CODE_OK.getValue();
-        response.message = message;
+    private String msg;
+
+    /**
+     * 调用是否成功，true成功，false异常
+     */
+    private boolean isSuccess;
+
+    /**
+     * 返回的结果
+     * 不进行序列化
+     */
+    private transient T result;
+
+    /**
+     * 拓展信息
+     * 不进行序列化
+     */
+    private transient Map<String, Object> expandInfo;
+
+    public static <T> Response<T> success(T result){
+        return generateResponse(true, Code.SUCCESS, result);
+    }
+
+    public static <T> Response<T> fail(String code, String msg) {
+        return fail(Code.business(code, msg));
+    }
+
+    public static <T> Response<T> fail(Code code) {
+        return generateResponse(false, code, null);
+    }
+
+    private static <T> Response<T> generateResponse(boolean isSuccess, Code code, T result){
+        Response<T> response = new Response<>();
+        response.setCode(code.getCode())
+                .setMsg(code.getMsg())
+                .setResult(result)
+                .setSuccess(isSuccess);
         return response;
     }
 
-    /**
-     * 成功状态的返回
-     * 更加方便返回成功数据
-     *
-     * @param message 返回的详细信息
-     * @param data 返回的数据
-     * @param <R> 返回的数据类型
-     * @return 一个返回类的实体
-     */
-    public static <R> Response<R> ok(String message, R data){
-        Response<R> response = new Response<>();
-        response.code = Code.CODE_OK.getValue();
-        response.message = message;
-        response.data = data;
-        return response;
+    @Override
+    public String toString() {
+        return "Response{" +
+                "code='" + code + '\'' +
+                ", msg='" + msg + '\'' +
+                ", isSuccess=" + isSuccess +
+                ", result=" + result +
+                '}';
     }
-
-    /**
-     * 错误状态的返回
-     * 只返回 500 错误
-     *
-     * @param message 返回的详细信息
-     * @param <R> 返回的数据类型
-     * @return 一个返回类的实体
-     */
-    public static <R> Response<R> error(String message){
-        Response<R> response = new Response<>();
-        response.code = Code.CODE_ERROR.getValue();
-        response.message = message;
-        return response;
-    }
-
-    /**
-     * 错误状态的返回
-     *
-     * @param code 状态码
-     * @param message 返回的详细信息
-     * @param <R> 返回的数据类型
-     * @return 一个返回类的实体
-     */
-    public static <R> Response<R> error(Integer code,String message){
-        Response<R> response = new Response<>();
-        response.code = code;
-        response.message = message;
-        return response;
-    }
-
 }
