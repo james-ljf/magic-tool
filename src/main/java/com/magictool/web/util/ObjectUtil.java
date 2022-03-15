@@ -1,5 +1,8 @@
 package com.magictool.web.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +13,25 @@ import java.util.regex.Pattern;
  * 对象工具类
  */
 public class ObjectUtil {
+
+    private static final Logger logger = LoggerFactory.getLogger(ObjectUtil.class);
+
+    /**
+     * 将 object 对象转换为指定泛型对象
+     *
+     * @param obj 需要转换的对象
+     * @param cla 转换的类型
+     * @param <T> 泛型类型
+     * @return 转换成 T 类型的对象, 如果转换失败则返回 {@link null}
+     */
+    public static <T> T objToT(Object obj, Class<T> cla) {
+        try {
+            return cla.cast(obj);
+        } catch (ClassCastException e) {
+            logger.error(" occur error to type conversion ", e);
+        }
+        return null;
+    }
 
     /**
      * 检验某个对象中属性是否不为空
