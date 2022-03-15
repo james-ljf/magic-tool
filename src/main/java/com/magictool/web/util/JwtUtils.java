@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * Tool classes for generating and verifying tokens
+ * 用于生成和验证 token 的工具类
  * @author lijf
  */
 public class JwtUtils {
@@ -17,7 +17,7 @@ public class JwtUtils {
     /**
      * token 过期时间
      */
-    private static final long TOKEN_EXPIRED_TIME = 1000 * 60 * 60 * 24L;
+    public static final long TOKEN_EXPIRED_TIME = 1000 * 60 * 60 * 24L;
 
     /**
      * 签发ID
@@ -25,10 +25,14 @@ public class JwtUtils {
     public static final String ISSUE_ID = "admin";
 
     /**
+     * userId 标识
+     */
+    public static final String USER_ID = "userId";
+
+    /**
      * 加密/解密 密钥
      */
     private static final String JWT_SECRET = "HS256/MD5";
-
 
     /**
      * 创建token
@@ -53,6 +57,17 @@ public class JwtUtils {
             builder.setExpiration(exp);
         }
         return builder.compact();
+    }
+
+    /**
+     * 通过 token 获取 userId
+     *
+     * @param token token
+     * @return userId
+     */
+    public static String getUserId(String token){
+        Claims claims = verifyJwt(token);
+        return claims.get(USER_ID) + "";
     }
 
 
