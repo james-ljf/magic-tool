@@ -154,23 +154,5 @@ public class ObjectUtil {
         return str;
     }
 
-    /**
-     * 将 object 对象转换为指定泛型的 list 对象
-     *
-     * @param obj   需要转换的对象
-     * @param cla   list 对象的泛型
-     * @param <T>   list 对象的泛型类型
-     * @return      转换的 list 对象
-     */
-    public static <T> List<T> objToList(Object obj, Class<T> cla){
-        List<T> list = new ArrayList<T>();
-        if (obj instanceof List<?>) {
-            for (Object o : (List<?>) obj) {
-                list.add(cla.cast(o));
-            }
-            return list;
-        }
-        return null;
-    }
 
 }
