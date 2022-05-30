@@ -15,7 +15,7 @@ public class ListUtils {
     /**
      * 根据集合范型的属性删除集合中的重复元素
      * @param list  集合
-     * @param function  such as：User::getUId
+     * @param function  例：User::getUId
      */
     public static <T,E> void removeElement(List<T> list, Function<T,E> function){
         if (CollectionUtils.isEmpty(list)){

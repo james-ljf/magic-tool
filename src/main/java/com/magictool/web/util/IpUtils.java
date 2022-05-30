@@ -1,13 +1,12 @@
 package com.magictool.web.util;
 
-import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 /**
- * 获取IP方法
+ * 获取IP
  *
  * @author weibo
  */

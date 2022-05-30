@@ -240,7 +240,7 @@ public final class RedisUtil implements ApplicationContextAware {
             return redisTemplate.opsForSet().members(key);
         } catch (Exception e) {
             logger.error(" [getSet] occur error ", e);
-            return null;
+            return Collections.emptySet();
         }
     }
 
@@ -257,7 +257,7 @@ public final class RedisUtil implements ApplicationContextAware {
             return redisTemplate.opsForList().range(key, start, end);
         } catch (Exception e) {
             logger.error(" [getList] occur error ", e);
-            return null;
+            return Collections.emptyList();
         }
     }
 

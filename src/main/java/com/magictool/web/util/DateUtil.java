@@ -1,14 +1,11 @@
 package com.magictool.web.util;
 
-import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Time tool class
+ * 时间操作类
  * @author lijf
  */
 public class DateUtil extends DateUtils {
