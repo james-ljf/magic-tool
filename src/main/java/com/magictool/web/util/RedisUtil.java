@@ -1,11 +1,21 @@
 package com.magictool.web.util;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -14,30 +24,79 @@ import java.util.concurrent.TimeUnit;
 /**
  * redis 工具类
  *
- * @author : tx
- * @time : 2022/2/21 16:43
+ * @author tx
+ * @time 2022/2/21 16:43
+ * @version 2.0.0
  **/
-@Component
 public final class RedisUtil implements ApplicationContextAware {
 
+    /**
+     * 日志记录
+     */
     private static final Logger logger = LoggerFactory.getLogger(RedisUtil.class);
 
+    /**
+     * Spring 上下文容器
+     * 好像没什么用 , 留下来先观察一下
+     */
     private static ApplicationContext applicationContext;
 
+    /**
+     * Spring 容器中注册的 redisTemplate Bean
+     */
     private static RedisTemplate<String, Object> redisTemplate ;
 
     // ============================= constant ============================
 
+    /**
+     * 过期错误的标识
+     */
     public static final long EXPIRE_ERROR = -999L;
 
+    /**
+     * 永不过期的标识
+     */
     private static final long NEVER_EXPIRE = 0;
 
     // ============================= init ============================
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        RedisUtil.applicationContext = applicationContext;
-        redisTemplate = RedisUtil.applicationContext.getBean("redisTemplate", RedisTemplate.class);
+        // 获取 redis 连接池
+        RedisConnectionFactory redisConnectionFactory = applicationContext.getBean(RedisConnectionFactory.class);
+        redisTemplate = new RedisTemplate<String, Object>();
+        //启用事务支持
+        redisTemplate.setEnableTransactionSupport(true);
+        //设置key的序列化机制为String的机制（直接存储值）
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        //设置HashKey的序列化机制
+        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+        //设置Value的序列化机制
+        redisTemplate.setValueSerializer(getJsonSerializer());
+        redisTemplate.setHashValueSerializer(getJsonSerializer());
+        //设置RedisConnectionFactory
+        redisTemplate.setConnectionFactory(redisConnectionFactory);
+    }
+
+    /**
+     * 设置 redis 的序列化机制
+     *
+     * @return  序列化机制
+     */
+    private static Jackson2JsonRedisSerializer<Object> getJsonSerializer(){
+        Jackson2JsonRedisSerializer<Object> serializer = new Jackson2JsonRedisSerializer<Object>(Object.class);
+        ObjectMapper om = new ObjectMapper();
+        //访问类型
+        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        //将类的全名序列化到json字符串中
+        om.activateDefaultTyping(LaissezFaireSubTypeValidator.instance,
+                ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.WRAPPER_ARRAY);
+        //对于匹配不了的属性忽略报错信息
+        om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        //不包含任何属性的bean也不报错
+        om.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        serializer.setObjectMapper(om);
+        return serializer;
     }
 
     // ============================= common ============================
@@ -60,7 +119,6 @@ public final class RedisUtil implements ApplicationContextAware {
      * @param unit 时间单位
      */
     public static void expire(String key, long time, TimeUnit unit) {
-        Objects.requireNonNull(key);
         try {
             if (time > 0) {
                 redisTemplate.expire(key, time, unit);
@@ -98,7 +156,7 @@ public final class RedisUtil implements ApplicationContextAware {
      * 判断key是否存在
      *
      * @param key 键
-     * @return true 存在 false不存在
+     * @return {@code true} 存在, {@code false}不存在
      */
     public static boolean hasKey(String key) {
         boolean result = Boolean.FALSE;
@@ -127,7 +185,7 @@ public final class RedisUtil implements ApplicationContextAware {
     }
 
 
-    // ============================ query =============================
+    // ============================ get =============================
 
     /**
      * 获取普通缓存
@@ -155,6 +213,7 @@ public final class RedisUtil implements ApplicationContextAware {
         try {
             return redisTemplate.opsForHash().get(key, item);
         } catch (Exception e) {
+            logger.error(" [getHash] occur error ", e);
             return null;
         }
     }
@@ -218,16 +277,16 @@ public final class RedisUtil implements ApplicationContextAware {
         }
     }
 
-    // ============================ update =============================
+    // ============================ set =============================
 
     /**
-     * 放入普通缓存
+     * 放入普通缓存, 缓存时间为永不过期
      *
      * @param key   键
      * @param value 值
      */
     public static void set(String key, Object value) {
-        set(key, value, 0);
+        set(key, value, NEVER_EXPIRE);
     }
 
     /**
@@ -252,19 +311,15 @@ public final class RedisUtil implements ApplicationContextAware {
      * @throws NullPointerException 当 key 为 null 时
      */
     public static void set(String key, Object value, long time, TimeUnit unit) {
-        Objects.requireNonNull(key);
-
         try {
-            if (time > 0) {
+            if (time >= NEVER_EXPIRE) {
                 redisTemplate.opsForValue().set(key, value, time, unit);
             } else {
                 set(key, value);
             }
-
         } catch (Exception e) {
             logger.error(" [set] occur error ", e);
         }
-
     }
 
     /**
@@ -279,18 +334,30 @@ public final class RedisUtil implements ApplicationContextAware {
 
     /**
      * hash 缓存放入多个键值
-     * 并且可以设置缓存时间
+     * 可以设置缓存时间
      *
      * @param key  键
      * @param map  对应多个键值
      * @param time 时间(秒)
      */
     public static void setHashAll(String key, Map<String, Object> map, long time) {
-        Objects.requireNonNull(key);
+        setHashAll(key, map, time, TimeUnit.SECONDS);
+    }
+
+    /**
+     * hash 缓存放入多个键值
+     * 可以设置缓存时间
+     * 可以设置缓存时间单位
+     *
+     * @param key  键
+     * @param map  对应多个键值
+     * @param time 时间
+     */
+    public static void setHashAll(String key, Map<String, Object> map, long time, TimeUnit unit) {
         try {
             redisTemplate.opsForHash().putAll(key, map);
-            if (time > 0) {
-                expire(key, time);
+            if (time > NEVER_EXPIRE) {
+                expire(key, time, unit);
             }
         } catch (Exception e) {
             logger.error(" [setHashAll] occur error ", e);
@@ -318,11 +385,24 @@ public final class RedisUtil implements ApplicationContextAware {
      * @param time  时间(秒) 注意:如果已存在的hash表有时间,这里将会替换原有的时间
      */
     public static void setHash(String key, String item, Object value, long time) {
-        Objects.requireNonNull(key, item);
+        setHash(key, item, value, time, TimeUnit.SECONDS);
+    }
+
+    /**
+     * 向一张hash表中放入数据
+     * 可以设置缓存时间
+     * 可以设置缓存时间单位
+     *
+     * @param key   键
+     * @param item  项
+     * @param value 值
+     * @param time  时间(秒) 注意:如果已存在的hash表有时间,这里将会替换原有的时间
+     */
+    public static void setHash(String key, String item, Object value, long time, TimeUnit unit) {
         try {
             redisTemplate.opsForHash().put(key, item, value);
-            if (time > 0) {
-                expire(key, time);
+            if (time > NEVER_EXPIRE) {
+                expire(key, time, unit);
             }
         } catch (Exception e) {
             logger.error("[setHash] occur error ", e);
@@ -341,17 +421,30 @@ public final class RedisUtil implements ApplicationContextAware {
 
     /**
      * 将set数据放入缓存
-     * 并且可以设置缓存时间
+     * 可以设置缓存时间
      *
      * @param key    键
      * @param time   时间(秒)
      * @param values 值 可以是多个
      */
     public static void setSet(String key, long time, Object... values) {
+        setSet(key, time, TimeUnit.SECONDS,values);
+    }
+
+    /**
+     * 将set数据放入缓存
+     * 可以设置缓存时间
+     * 可以设置缓存时间单位
+     *
+     * @param key    键
+     * @param time   时间
+     * @param values 值 可以是多个
+     */
+    public static void setSet(String key, long time, TimeUnit unit, Object... values) {
         try {
             redisTemplate.opsForSet().add(key, values);
-            if (time > 0) {
-                expire(key, time);
+            if (time > NEVER_EXPIRE) {
+                expire(key, time, unit);
             }
         } catch (Exception e) {
             logger.error(" [setSet] occur error ", e);
@@ -370,17 +463,30 @@ public final class RedisUtil implements ApplicationContextAware {
 
     /**
      * 将 list 属性放入缓存
-     * 并且可以设置缓存时间
+     * 可以设置缓存时间
      *
      * @param key   键
      * @param value 值
      * @param time  时间(秒)
      */
     public static void setList(String key, Object value, long time) {
+        setList(key, value, time, TimeUnit.SECONDS);
+    }
+
+    /**
+     * 将 list 属性放入缓存
+     * 可以设置缓存时间
+     * 可以设置缓存时间单位
+     *
+     * @param key   键
+     * @param value 值
+     * @param time  时间
+     */
+    public static void setList(String key, Object value, long time, TimeUnit unit) {
         try {
             redisTemplate.opsForList().rightPush(key, value);
-            if (time > 0) {
-                expire(key, time);
+            if (time > NEVER_EXPIRE) {
+                expire(key, time, unit);
             }
         } catch (Exception e) {
             logger.error(" [setList] occur error ", e);
@@ -399,17 +505,30 @@ public final class RedisUtil implements ApplicationContextAware {
 
     /**
      * 将 list 整个放入缓存
-     * 并且可以设置缓存时间
+     * 可以设置缓存时间
      *
      * @param key   键
      * @param value 值
      * @param time  时间(秒)
      */
     public static void setListAll(String key, List<Object> value, long time) {
+        setListAll(key, value, time, TimeUnit.SECONDS);
+    }
+
+    /**
+     * 将 list 整个放入缓存
+     * 可以设置缓存时间
+     * 可以设置缓存时间单位
+     *
+     * @param key   键
+     * @param value 值
+     * @param time  时间
+     */
+    public static void setListAll(String key, List<Object> value, long time, TimeUnit unit) {
         try {
             redisTemplate.opsForList().rightPushAll(key, value);
             if (time > 0) {
-                expire(key, time);
+                expire(key, time, unit);
             }
         } catch (Exception e) {
             logger.error(" [setListAll] occur error ", e);
