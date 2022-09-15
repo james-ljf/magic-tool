@@ -13,7 +13,7 @@ import java.util.function.Supplier;
  */
 public class BeanConvert extends BeanUtils {
     /**
-     * 集合数据的拷贝
+     * 集合数据的拷贝,需字段类型对应
      * @param sources: 数据源类
      * @param target: 目标类::new
      * @return  List<T>

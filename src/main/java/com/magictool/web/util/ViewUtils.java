@@ -4,7 +4,7 @@ package com.magictool.web.util;
  *  脱敏工具
  *  @author ljf
  */
-public class ViewConvertUtils {
+public class ViewUtils {
     /**
      * 转换Email的格式，中间加*
      * 长度如果小于7，则保留前后1个字符

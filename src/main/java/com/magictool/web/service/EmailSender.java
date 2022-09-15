@@ -23,6 +23,7 @@ import java.util.Objects;
 
 /**
  * 邮件发送模板
+ *
  * @author lijf
  */
 @Component
@@ -39,14 +40,13 @@ public class EmailSender {
     /**
      * base64转化静态资源
      */
-    @PostConstruct
-    public void initLogo(){
+    public void initLogo(String path) {
         try {
             BufferedImage image = ImageIO.read(Objects.requireNonNull(EmailSender.class.getResourceAsStream("resource文件夹下静态资源路径")));
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             // 转换为gif，占用内存更小
             ImageIO.write(image, "gif", stream);
-            base64Logo = "data:image/gif;base64," + Base64.encode(stream.toByteArray());
+            base64Logo = path + Base64.encode(stream.toByteArray());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -54,12 +54,13 @@ public class EmailSender {
 
     /**
      * 发送简单邮件的方法
-     * @param to        接收邮件方
-     * @param title     邮件的标题
-     * @param content   邮件的内容
+     *
+     * @param to      接收邮件方
+     * @param title   邮件的标题
+     * @param content 邮件的内容
      */
     @Async("asyncPromiseExecutor")
-    public void sendSimpleEmail(String to, String title, String content){
+    public void sendSimpleEmail(String to, String title, String content) {
         //简单的邮件信息对象
         SimpleMailMessage message = new SimpleMailMessage();
         //设置发送给谁
@@ -76,12 +77,16 @@ public class EmailSender {
 
     /**
      * 发送Html版本的验证码
-     * @param to         发送给谁
-     * @param content    内容
-     * @param title      标题
+     *
+     * @param to           发送给谁
+     * @param content      内容
+     * @param title        标题
+     * @param templateName 模板
+     * @param path         图片路径
      */
     @Async("asyncPromiseExecutor")
-    public void sendHtmlEmail(String to, String title, String content, String templateName){
+    public void sendHtmlEmail(String to, String title, String content, String templateName, String path) {
+        initLogo(path);
         //创建一个Thymeleaf的Context对象
         Context context = new Context();
         //设置参数

@@ -15,8 +15,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class FilterConfig {
 
-    // =======================================================================================> Filter
-
     /**
      * 注册过滤器 bean
      * @return filter bean

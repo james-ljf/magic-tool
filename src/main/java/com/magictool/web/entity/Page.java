@@ -2,6 +2,7 @@ package com.magictool.web.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -14,7 +15,10 @@ import java.util.List;
  */
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class Page<T> implements Serializable {
+
+    private static final long serialVersionUID = -1984331333988532795L;
 
     /** 总记录数 */
     private long totalCount = 0;

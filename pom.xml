@@ -24,9 +24,9 @@
         <mybatis.plus.version>3.5.2</mybatis.plus.version>
         <pagehelper.version>1.4.3</pagehelper.version>
         <redisson.version>3.17.6</redisson.version>
-        <hutool.version>5.7.15</hutool.version>
+        <hutool.version>5.8.6</hutool.version>
         <lucene.version>7.3.1</lucene.version>
-        <fastjson.version>1.2.79</fastjson.version>
+        <fastjson.version>2.0.13</fastjson.version>
         <java.version>1.8</java.version>
     </properties>
 
@@ -156,13 +156,6 @@
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-analyzers-smartcn</artifactId>
             <version>${lucene.version}</version>
-        </dependency>
-
-        <!--ik分词器-->
-        <dependency>
-            <groupId>com.janeluo</groupId>
-            <artifactId>ikanalyzer</artifactId>
-            <version>2012_u6</version>
         </dependency>
 
         <dependency>

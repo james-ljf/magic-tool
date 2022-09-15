@@ -9,16 +9,18 @@ import java.util.Date;
 
 /**
  * Time tool class
+ *
  * @author lijf
  */
 public class DateUtil extends DateUtils {
 
     /**
-     * Calculate the two time differences,return "xx , xx , xx ,"
-     * It is recommended to use replaceAll() method separated commas to obtain similar "xx day xx hour xx min" formats
+     * 计算两次时间差，返回“xx , xx , xx ”
+     * 建议使用replaceAll() 方法用逗号分隔得到类似的“xx 日 xx 小时 xx 分钟” 格式
+     *
      * @param endDate   结束时间
      * @param startDate 开始时间
-     * @return  String
+     * @return String
      */
     public static String getDatePoor(Date endDate, Date startDate) {
         long nd = 1000 * 24 * 60 * 60L;
@@ -36,15 +38,16 @@ public class DateUtil extends DateUtils {
     }
 
     /**
-     * Calculate the number of days between two dates and return
+     * 计算两个日期之间的天数并返回
+     *
      * @param endDate   结束时间
      * @param startDate 开始时间
-     * @return  Integer
+     * @return Integer
      */
     public static Integer getDatePoorAge(Date endDate, Date startDate) {
-        long nd = 1000 * 24 * 60 * 60;
-        long nh = 1000 * 60 * 60;
-        long nm = 1000 * 60;
+        long nd = 1000 * 24 * 60 * 60L;
+        long nh = 1000 * 60 * 60L;
+        long nm = 1000 * 60L;
         long diff = endDate.getTime() - startDate.getTime();
         long day = diff / nd;
         long hour = diff % nd / nh;
@@ -52,7 +55,7 @@ public class DateUtil extends DateUtils {
         if (day < 0 && hour < 0 && min < 0) {
             return null;
         }
-        return (int)day;
+        return (int) day;
     }
 }
 

@@ -5,6 +5,7 @@ import java.nio.file.Paths;
 
 import com.magictool.web.constants.SingletonLucene;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.lucene.analysis.core.SimpleAnalyzer;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
@@ -21,7 +22,6 @@ import org.apache.lucene.search.highlight.SimpleHTMLFormatter;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
-import org.wltea.analyzer.lucene.IKAnalyzer;
 
 /**
  * Lucene常用工具类
@@ -82,7 +82,7 @@ public class LuceneUtil {
     public static IndexWriter buildIndexWriter(Directory directory) {
         IndexWriter indexWriter = null;
         try {
-            IndexWriterConfig config = new IndexWriterConfig(new IKAnalyzer());
+            IndexWriterConfig config = new IndexWriterConfig(new SimpleAnalyzer());
             // 设置索引打开方式
             config.setOpenMode(OpenMode.CREATE_OR_APPEND);
             // 设置关闭之前先提交

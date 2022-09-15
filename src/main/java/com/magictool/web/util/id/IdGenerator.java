@@ -1,4 +1,5 @@
 package com.magictool.web.util.id;
+
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.lang.ObjectId;
@@ -14,7 +15,7 @@ public class IdGenerator {
 
     private static long workerId = 0;
 
-    static{
+    static {
         try {
             workerId = NetUtil.ipv4ToLong(NetUtil.getLocalhostStr()) % 32;
         } catch (Exception e) {
@@ -23,6 +24,7 @@ public class IdGenerator {
             log.info("当前机器 workerId: {}", workerId);
         }
     }
+
     /**
      * 获取一个批次号，形如 2019071015301361000101237
      * <p>
@@ -78,6 +80,7 @@ public class IdGenerator {
      * 生成类似：5b9e306a4df4f8c54a39fb0c
      * <p>
      * ObjectId 是 MongoDB 数据库的一种唯一 ID 生成策略，
+     *
      * @return
      */
     public static String objectId() {

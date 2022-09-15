@@ -9,6 +9,7 @@ import java.util.List;
 
 /**
  * 布尔组合查询子条件构造类
+ *
  * @Author ljf
  * @Date 2021/11/18 11:44
  */
@@ -21,49 +22,54 @@ public class BoolQueryBuilders {
 
     /**
      * 用于应出现在匹配文档中的子句。 对于没有MUST子句的 BooleanQuery，一个或多个SHOULD子句必须匹配一个文档，BooleanQuery 才能匹配
+     *
      * @param query 查询条件
-     * @return  this
+     * @return this
      */
-    public BoolQueryBuilders should(Query query){
+    public BoolQueryBuilders should(Query query) {
         shouldQueries.add(query);
         return this;
     }
 
     /**
      * 用于必须出现在匹配文档中的子句。
+     *
      * @param query 查询条件
-     * @return  this
+     * @return this
      */
-    public BoolQueryBuilders must(Query query){
+    public BoolQueryBuilders must(Query query) {
         mustQueries.add(query);
         return this;
     }
 
     /**
      * 用于不得出现在匹配文档中的子句。 请注意，无法搜索仅包含MUST_NOT子句的查询
+     *
      * @param query 查询条件
-     * @return  this
+     * @return this
      */
-    public BoolQueryBuilders mustNot(Query query){
+    public BoolQueryBuilders mustNot(Query query) {
         mustNotQueries.add(query);
         return this;
     }
 
     /**
      * 像MUST一样，除了这些子句不参与评分
+     *
      * @param query 查询条件
-     * @return  this
+     * @return this
      */
-    public BoolQueryBuilders filter(Query query){
+    public BoolQueryBuilders filter(Query query) {
         filterQueries.add(query);
         return this;
     }
 
     /**
      * 将子条件放入布尔条件构造器
-      * @return BooleanQuery
+     *
+     * @return BooleanQuery
      */
-    public BooleanQuery build(){
+    public BooleanQuery build() {
         BooleanQuery.Builder builder = new BooleanQuery.Builder();
         for (Query shouldQuery : shouldQueries) {
             builder.add(shouldQuery, BooleanClause.Occur.SHOULD);

@@ -18,6 +18,8 @@ import java.util.Map;
 @NoArgsConstructor
 public class Response<T> implements Serializable {
 
+    private static final long serialVersionUID = 7390569824082954874L;
+
     /**
      * 自定义业务状态码，8888表示请求成功，非8888则表示请求异常
      */

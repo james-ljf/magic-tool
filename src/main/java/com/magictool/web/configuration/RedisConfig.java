@@ -20,13 +20,14 @@ import java.time.Duration;
 
 /**
  * redis配置类
+ *
  * @author lijf
  */
 @Configuration
 public class RedisConfig {
 
     @Bean
-    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory){
+    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setEnableTransactionSupport(true);
         //key和value的序列化机制
@@ -42,7 +43,7 @@ public class RedisConfig {
         return redisTemplate;
     }
 
-    public Jackson2JsonRedisSerializer<Object> getJsonSerializer(){
+    public Jackson2JsonRedisSerializer<Object> getJsonSerializer() {
         Jackson2JsonRedisSerializer<Object> serializer = new Jackson2JsonRedisSerializer<Object>(Object.class);
         ObjectMapper om = new ObjectMapper();
         //只针对非空的属性进行序列化
@@ -61,7 +62,7 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisCacheConfiguration redisCacheConfiguration(){
+    public RedisCacheConfiguration redisCacheConfiguration() {
         RedisCacheConfiguration configuration = RedisCacheConfiguration.defaultCacheConfig();
         return configuration.serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(getJsonSerializer()))

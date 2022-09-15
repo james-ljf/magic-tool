@@ -11,12 +11,9 @@ import java.net.UnknownHostException;
  *
  * @author weibo
  */
-public class IpUtils
-{
-    public static String getIpAddr(HttpServletRequest request)
-    {
-        if (request == null)
-        {
+public class IpUtils {
+    public static String getIpAddr(HttpServletRequest request) {
+        if (request == null) {
             return null;
         }
 
@@ -63,7 +60,7 @@ public class IpUtils
     }
 
     private static boolean internalIp(byte[] addr) {
-        if (addr == null || addr.length < 2){
+        if (addr == null || addr.length < 2) {
             return true;
         }
         final byte b0 = addr[0];
@@ -113,7 +110,7 @@ public class IpUtils
             switch (elements.length) {
                 case 1:
                     l = Long.parseLong(elements[0]);
-                    if ((l < 0L) || (l > 4294967295L)){
+                    if ((l < 0L) || (l > 4294967295L)) {
                         return new byte[0];
                     }
                     bytes[0] = (byte) (int) (l >> 24 & 0xFF);
@@ -160,11 +157,10 @@ public class IpUtils
                     }
                     break;
                 default:
-                    return null;
+                    return new byte[0];
             }
-        }
-        catch (NumberFormatException e) {
-            return null;
+        } catch (NumberFormatException e) {
+            return new byte[0];
         }
         return bytes;
     }
@@ -172,20 +168,16 @@ public class IpUtils
     public static String getHostIp() {
         try {
             return InetAddress.getLocalHost().getHostAddress();
-        }
-        catch (UnknownHostException e) {
+        } catch (UnknownHostException e) {
             e.printStackTrace();
         }
         return "127.0.0.1";
     }
 
-    public static String getHostName()
-    {
-        try
-        {
+    public static String getHostName() {
+        try {
             return InetAddress.getLocalHost().getHostName();
-        }
-        catch (UnknownHostException e) {
+        } catch (UnknownHostException e) {
             e.printStackTrace();
         }
         return "未知";
