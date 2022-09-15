@@ -1,5 +1,8 @@
 # magic-tool
 
+
+[![OSCS Status](https://www.oscs1024.com/platform/badge/james-ljf/magic-tool.svg?size=small)](https://www.oscs1024.com/project/james-ljf/magic-tool?ref=badge_small)
+
 #### 介绍
 工具SDK
 
