@@ -21,9 +21,9 @@ public class DateUtil extends DateUtils {
      * @return  String
      */
     public static String getDatePoor(Date endDate, Date startDate) {
-        long nd = 1000 * 24 * 60 * 60;
-        long nh = 1000 * 60 * 60;
-        long nm = 1000 * 60;
+        long nd = 1000 * 24 * 60 * 60L;
+        long nh = 1000 * 60 * 60L;
+        long nm = 1000 * 60L;
         // 获得两个时间的毫秒时间差异
         long diff = endDate.getTime() - startDate.getTime();
         long day = diff / nd;

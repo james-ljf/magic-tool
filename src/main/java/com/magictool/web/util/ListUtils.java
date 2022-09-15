@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 
-/**集合处理工具
+/**
+ * 集合处理工具
  * @author lijf
  */
 public class ListUtils {

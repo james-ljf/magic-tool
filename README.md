@@ -5,11 +5,14 @@
 
 
 #### 使用说明
-
-1.  复制粘贴
-2.  当成公用模块在springboot or springcloud项目中使用
-3.  git clone
-
+通过依赖引入
+~~~
+<dependency>
+  <groupId>org.example</groupId>
+  <artifactId>magic-tool</artifactId>
+  <version>1.0.0</version>
+</dependency>
+~~~
 #### 参与贡献
 
 1.  Fork 本仓库

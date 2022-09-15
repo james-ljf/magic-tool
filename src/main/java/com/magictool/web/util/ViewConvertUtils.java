@@ -1,5 +1,9 @@
 package com.magictool.web.util;
 
+/**
+ *  脱敏工具
+ *  @author ljf
+ */
 public class ViewConvertUtils {
     /**
      * 转换Email的格式，中间加*
