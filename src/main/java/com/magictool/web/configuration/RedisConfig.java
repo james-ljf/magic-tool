@@ -1,6 +1,7 @@
 package com.magictool.web.configuration;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -31,7 +32,6 @@ public class RedisConfig {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setEnableTransactionSupport(true);
         //key和value的序列化机制
-        //设置key的序列化机制为String的机制（直接存储值）
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         //设置HashKey的序列化机制
         redisTemplate.setHashKeySerializer(new StringRedisSerializer());
@@ -47,7 +47,7 @@ public class RedisConfig {
         Jackson2JsonRedisSerializer<Object> serializer = new Jackson2JsonRedisSerializer<Object>(Object.class);
         ObjectMapper om = new ObjectMapper();
         //只针对非空的属性进行序列化
-//        om.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        om.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         //访问类型
         om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
         //将类的全名序列化到json字符串中
