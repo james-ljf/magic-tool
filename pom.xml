@@ -22,11 +22,11 @@
         <common.lang3.version>3.12.0</common.lang3.version>
         <axis.version>1.7.9</axis.version>
         <mybatis.plus.version>3.5.2</mybatis.plus.version>
-        <pagehelper.version>1.4.3</pagehelper.version>
+        <pagehelper.version>1.4.5</pagehelper.version>
         <redisson.version>3.17.6</redisson.version>
-        <hutool.version>5.8.6</hutool.version>
+        <hutool.version>5.8.7</hutool.version>
         <lucene.version>7.3.1</lucene.version>
-        <fastjson.version>2.0.13</fastjson.version>
+        <fastjson.version>2.0.14</fastjson.version>
         <java.version>1.8</java.version>
     </properties>
 
@@ -71,6 +71,12 @@
             <version>2.9.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>2.9.0</version>
+        </dependency>
+
         <!--布隆过滤器-->
         <dependency>
             <groupId>org.redisson</groupId>
@@ -83,13 +89,6 @@
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <version>${mybatis.plus.version}</version>
-        </dependency>
-
-        <!--base64压缩图片相关依赖-->
-        <dependency>
-            <groupId>org.apache.axis</groupId>
-            <artifactId>axis</artifactId>
-            <version>${axis.version}</version>
         </dependency>
 
         <!--分页插件-->

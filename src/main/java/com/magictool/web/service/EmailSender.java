@@ -1,6 +1,6 @@
 package com.magictool.web.service;
 
-import org.apache.axis.encoding.Base64;
+import cn.hutool.core.codec.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;

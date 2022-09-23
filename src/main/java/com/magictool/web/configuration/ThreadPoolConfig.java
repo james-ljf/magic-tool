@@ -20,11 +20,11 @@ public class ThreadPoolConfig {
     public Executor asyncPromiseExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         //配置核心线程数
-        executor.setCorePoolSize(5);
+        executor.setCorePoolSize(100);
         //配置最大线程数
-        executor.setMaxPoolSize(20);
+        executor.setMaxPoolSize(200);
         //配置队列大小
-        executor.setQueueCapacity(99999);
+        executor.setQueueCapacity(5000);
         //配置线程池中的线程的名称前缀
         executor.setThreadNamePrefix("thread-pool-");
         /*
